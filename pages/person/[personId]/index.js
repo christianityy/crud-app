@@ -25,7 +25,7 @@ export default function PersonDetailPage(props) {
 
 export async function getStaticPaths() {
   const client = await MongoClient.connect(
-    'mongodb+srv://mrcagonzales:dx024166@cluster0.9ysec.mongodb.net/persons?retryWrites=true&w=majority',
+    'mongodb+srv://user:password@cluster0.9ysec.mongodb.net/persons?retryWrites=true&w=majority',
   )
   const db = client.db()
   const personsCollection = db.collection('persons')
@@ -40,7 +40,7 @@ export async function getStaticPaths() {
 export async function getStaticProps(context) {
   const personId = context.params.personId
   const client = await MongoClient.connect(
-    'mongodb+srv://mrcagonzales:dx024166@cluster0.9ysec.mongodb.net/persons?retryWrites=true&w=majority',
+    'mongodb+srv://user:password@cluster0.9ysec.mongodb.net/persons?retryWrites=true&w=majority',
   )
   const db = client.db()
   const personsCollection = db.collection('persons')

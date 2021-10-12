@@ -17,7 +17,7 @@ export default function PersonListPage(props) {
 
 export async function getStaticProps() {
   const client = await MongoClient.connect(
-    'mongodb+srv://mrcagonzales:dx024166@cluster0.9ysec.mongodb.net/persons?retryWrites=true&w=majority',
+    'mongodb+srv://user:password@cluster0.9ysec.mongodb.net/persons?retryWrites=true&w=majority',
   )
   const db = client.db()
   const personsCollection = db.collection('persons')
