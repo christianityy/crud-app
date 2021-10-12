@@ -5,7 +5,7 @@ async function handler(req, res) {
     const body = req.body
     const id = body.id
     const client = await MongoClient.connect(
-      'mongodb+srv://user:password@cluster0.9ysec.mongodb.net/persons?retryWrites=true&w=majority',
+      'mongodb+srv://<>:<>@cluster0.9ysec.mongodb.net/persons?retryWrites=true&w=majority',
     )
     const db = client.db()
     const personsCollection = db.collection('persons')
