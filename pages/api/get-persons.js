@@ -1,13 +1,12 @@
-import { ObjectId } from 'mongodb'
 import { connectToDatabase, getCollection } from '../../helpers/db-utils'
+
 async function handler(req, res) {
-  if (req.method === 'POST') {
-    const data = req.body
+  if (req.method === 'GET') {
     const client = await connectToDatabase()
     const personsCollection = await getCollection(client, 'persons')
-    const result = await personsCollection.deleteOne({ _id: ObjectId(data.id) })
+    const result = await personsCollection.find().toArray()
     client.close()
-    res.status(204).json({ message: 'Person Deleted.', result })
+    res.status(200).json(result)
   }
 }
 

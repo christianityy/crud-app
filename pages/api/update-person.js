@@ -1,15 +1,12 @@
-import { MongoClient, ObjectId } from 'mongodb'
-
+import { ObjectId } from 'mongodb'
+import { connectToDatabase, getCollection } from '../../helpers/db-utils'
 async function handler(req, res) {
   if (req.method === 'PUT') {
     const body = req.body
     const id = body.id
-    const client = await MongoClient.connect(
-      'mongodb+srv://<>:<>@cluster0.9ysec.mongodb.net/persons?retryWrites=true&w=majority',
-    )
-    const db = client.db()
-    const personsCollection = db.collection('persons')
-    const response = await personsCollection.updateOne(
+    const client = await connectToDatabase()
+    const personsCollection = await getCollection(client, 'persons')
+    const result = await personsCollection.updateOne(
       { _id: ObjectId(id) },
       {
         $set: {
@@ -22,7 +19,7 @@ async function handler(req, res) {
       },
     )
     client.close()
-    res.status(200).json({ message: 'Person Updated.', response: response })
+    res.status(200).json({ message: 'Person Updated.', result })
   }
 }
 

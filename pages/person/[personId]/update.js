@@ -2,7 +2,7 @@ import { Fragment } from 'react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import PersonForm from '../../../components/person/PersonForm'
-import { MongoClient, ObjectId } from 'mongodb'
+import { getPersonById, getPersons } from '../../../helpers/api-util'
 
 export default function PersonUpdatePage({ person }) {
   const router = useRouter()
@@ -47,37 +47,29 @@ export default function PersonUpdatePage({ person }) {
 }
 
 export async function getStaticPaths() {
-  const client = await MongoClient.connect(
-    'mongodb+srv://mrcagonzales:dx024166@cluster0.9ysec.mongodb.net/persons?retryWrites=true&w=majority',
-  )
-  const db = client.db()
-  const personsCollection = db.collection('persons')
-  const personIds = await personsCollection.find({}, { _id: 1 }).toArray()
-  client.close()
+  const persons = await getPersons()
+  let personIds = []
+  for (let key in persons) {
+    personIds.push({ params: { personId: persons[key]._id } })
+  }
   return {
     fallback: false,
-    paths: personIds.map((id) => ({ params: { personId: id._id.toString() } })),
+    paths: personIds,
   }
 }
 
 export async function getStaticProps(context) {
   const personId = context.params.personId
-  const client = await MongoClient.connect(
-    'mongodb+srv://<>:<>@cluster0.9ysec.mongodb.net/persons?retryWrites=true&w=majority',
-  )
-  const db = client.db()
-  const personsCollection = db.collection('persons')
-  const response = await personsCollection.findOne({ _id: ObjectId(personId) })
-  client.close()
+  const person = await getPersonById(personId)
   return {
     props: {
       person: {
-        firstname: response.firstname,
-        lastname: response.lastname,
-        gender: response.gender,
-        birthdate: response.birthdate,
-        age: response.age,
-        id: response._id.toString(),
+        firstname: person.data.firstname,
+        lastname: person.data.lastname,
+        gender: person.data.gender,
+        birthdate: person.data.birthdate,
+        age: person.data.age,
+        id: person.data._id,
       },
     },
   }

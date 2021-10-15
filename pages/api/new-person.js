@@ -1,16 +1,13 @@
-import { MongoClient } from 'mongodb'
+import { connectToDatabase, getCollection } from '../../helpers/db-utils'
 
 async function handler(req, res) {
   if (req.method === 'POST') {
     const data = req.body
-    const client = await MongoClient.connect(
-      'mongodb+srv://<>:<>@cluster0.9ysec.mongodb.net/persons?retryWrites=true&w=majority',
-    )
-    const db = client.db()
-    const personsCollection = db.collection('persons')
+    const client = await connectToDatabase()
+    const personsCollection = await getCollection(client, 'persons')
     const result = await personsCollection.insertOne(data)
     client.close()
-    res.status(201).json({ message: 'Person Inserted.' })
+    res.status(201).json({ message: 'Person Inserted.', result })
   }
 }
 
